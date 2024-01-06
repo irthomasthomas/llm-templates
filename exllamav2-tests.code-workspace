@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../Development/Projects/llm/exllamav2-tests"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../Development/Projects/llm/.venv/lib/python3.11/site-packages/human_eval"
+		}
+	],
+	"settings": {}
+}
