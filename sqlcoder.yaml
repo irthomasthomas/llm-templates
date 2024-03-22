@@ -1,0 +1,12 @@
+prompt: | 
+  ### Task
+  Generate a SQL query to answer [QUESTION]$input[/QUESTION]
+
+  ### Database Schema
+  The query will run on a database with the following schema:
+  $schema
+
+  ### Answer
+  [SQL]
+  Given the database schema, here is the SQL query that [QUESTION]$input[/QUESTION]
+  Is looking for:

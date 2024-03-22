@@ -1,0 +1,3 @@
+prompt: |
+  [INST] {{ $system }} {{ $input }} [/INST]
+  

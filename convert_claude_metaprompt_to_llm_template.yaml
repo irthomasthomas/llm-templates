@@ -1,0 +1,37 @@
+prompt: |
+  Variables:
+
+  {'$PROMPT_TEMPLATE'}
+
+  ************************
+
+  Prompt:
+  Your task is to convert the following prompt template into a YAML file format that can be used with
+  the llm tool:
+
+  <prompt_template>
+  {$PROMPT_TEMPLATE}
+  </prompt_template>
+
+  Please convert this prompt template into a properly formatted YAML template following the
+  conventions used by the llm tool. The converted YAML template should include:
+
+  - A descriptive name for the template
+  - The prompt text, with any variables demarcated using syntax: `$`variable_name
+  - A system prompt if applicable
+  - Default values for any variables if desired
+
+  Here is an example of how the YAML template should be structured:
+
+  name: example_template
+  system: You are an AI assistant that helps with writing and editing.
+  prompt: |
+  Please proofread and suggest improvements to the following text:
+  <text>
+  `$`input_text
+  </text>
+  defaults:
+  input_text: "This is an example input text."
+
+  In your response, please only provide the converted YAML template, without any additional commentary
+  or explanation. Output the YAML template directly, starting on the first line of your response.

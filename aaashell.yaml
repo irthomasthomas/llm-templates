@@ -1,0 +1,110 @@
+system: |
+  # THESE ARE ALL THE CUSTOM SHELL FUNCTIONS AVAILABLE.
+  # USE THIS KNOWLEDGE TO AUGMENT YOUR SHELL EXPERIENCE.
+  SCRIPT_DIR="$(dirname "$0")"
+  echo "SCRIPT_DIR: $SCRIPT_DIR"
+  source "/home/thomas/Development/linux-stuff/copy_file_tags.sh"
+
+  # Dir shortcuts
+  alias data='cd $HOME/Data'
+  alias docs='cd $HOME/Documents'
+  alias downloads='cd $HOME/Downloads'
+  alias models='cd $HOME/Code/models'
+  alias scripts='cd $HOME/Code/scripts'
+
+  # Github-cli gh
+  alias which='which -a'
+  alias labels='gh label list'
+
+  # Terminal navigation and search
+  goback() { cd $OLDPWD; } # Go back to the last dir (same as "cd -")
+  alias bd='cd -' # back to the last dir
+
+  alias ..='cd ..'
+  alias ...='cd ../..'
+  alias ....='cd ../../..'
+  alias .....='cd ../../../..'
+
+  # ls directories only
+  alias lsd="ls -d */"
+  #. Print a tree view of the current directory
+  alias treeview='ls -R | grep ":$" | sed -e "s/:$//" -e "s/[^-][^\/]*\//--/g" -e "s/^/   /" -e "s/-/|/"'
+  # Get the size of directories in the current folder
+  alias dsize='du -sh */'
+
+  # TIL: 'history' command contains only history for the current terminal session.
+  his() { history | grep "$1"; } # Useful for constraining searches to the session.
+  alias search=his
+
+  gsearch() { grep "$1" ~/.zhistory; }
+  alias gs=gsearch
+
+  alias pgrep='pgrep -i'
+  alias grep='grep -i --color=auto'
+  rgrep() { grep -R "$1" . }
+
+  alias open='xdg-open'
+
+  # Start a python file server in the current directory
+  alias serv='python3 -m http.server'
+
+  # Formatting & Code Highlighting
+  alias catpyg='pygmentize -g'
+  alias cathi='highlight --out-format=xterm256 --style=github --force --replace-tabs=4'
+  alias catglow="glow"
+
+  # Defensive CLI
+  alias rm='rm -I'
+  alias cp='cp -i'
+  alias mv='mv -i'
+  alias chgrp='chgrp --preserve-root'
+  alias chmod='chmod --preserve-root'
+  alias chown='chown --preserve-root'
+
+  # Process lookup
+  alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
+
+  # Networking
+  alias ports='netstat -tulanp'
+  alias speed='curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -'
+  alias myip='curl ipinfo.io/ip'
+
+  # File browsing
+  alias ttree='tree -L 5 -D -h -prune'
+
+  # Monitor changes in a directory:
+  alias watch='watch -n 1'
+
+  #Todo: make another logs alias for different levels of log .
+  # Quick logs
+  alias logs="sudo journalctl -p 0..4 -xn 100 --no-hostname"
+
+  alias venv='source ./venv/bin/activate'
+  alias gac='git add . && git commit -m'
+
+  # Example aliases
+  # OPENAI_API_KEY=$(cat /$HOME/openai_key)
+  export OPENAI_API_KEY
+  alias issues='gh issue list'
+  # Todo: make funcs the path of the current script
+  export funcs=$PWD/shell_functions_shared.sh
+
+  alias readability="shot-scraper javascript -i $HOME/Code/readability.js"
+
+  open_kate_at_line() {
+    # Other function code...
+  }
+
+  send_issue() {
+    # Other function code...
+  }
+
+  send_quickidea_to_gh() {
+    # Other function code...
+  }
+
+prompt: |
+  **USER_QUESTION:**
+  $input
+  **END_USER_QUESTION**
+  

@@ -1,43 +1,47 @@
 prompt: |
-    User:Open a file from the filesystem.
-    The user is prompted with the prompt buffer, files are browsable with
-    fuzzy suggestion.
-    Response:(define-command-global open-file
-    (&key
-     (default-directory
-      (if (quri.uri.file:uri-file-p (url (current-buffer)))
-          (uiop/pathname:pathname-directory-pathname
-           (quri.uri:uri-path (url (current-buffer))))
-          *default-pathname-defaults*)))
-    "Open a file from the filesystem.
-    The user is prompted with the prompt buffer, files are browsable with
-    fuzzy suggestion."
-    (prompt :prompt "Open file" :extra-modes 'file-manager-mode :input
-            (uiop/filesystem:native-namestring default-directory) :sources
-            'open-file-source))
+  user:Nyxt browser function to retrieve the text content of a buffer and return it as a string.
+  If a buffer is not provided, it uses the current buffer.
+  assistant:(defun get-buffer-text (&optional buf)
+    (nyxt/mode/document:select-all buf)
+    (nyxt/mode/document:copy buf)
+    (trivial-clipboard:text))
 
-    User:Return the list of tags of the bookmark corresponding to URL.
-    Response:(defun url-bookmark-tags (url)
-    "Return the list of tags of the bookmark corresponding to URL."
-    (let ((bookmarks (files:content (bookmarks-file (current-buffer)))))
-    (alexandria:when-let ((existing
-                           (find url bookmarks :key #'url :test #'url-equal)))
-      (tags existing))))
+  user:This nyxt browser internal page displays the result of a command execution.
+  It takes a keyword argument 'text' which represents the output text.
+  assistant:(define-internal-page cmd-result (&key text) (:title "*Result*")
+    (spinneret:with-html-string
+        (dolist (line (str:split #\newline text))
+            (:p line))))
 
-    User:Summarize the current buffer by creating a new summary buffer.
-    SUMMARY-LENGTH allows to list more/less summary items.
-    Response:(define-command-global summarize-buffer
-    (&key (summary-length 5) (buffer (current-buffer)))
-    "Summarize the current buffer by creating a new summary buffer.
-    SUMMARY-LENGTH allows to list more/less summary items."
-    (buffer-load-internal-page-focus 'summarize-buffer :summary-length
-                                    summary-length :id (id buffer)))
+  user:A nyxt browser command which takes an optional buffer and command as arguments.
+  It retrieves the text content of the buffer, escapes it for shell execution,
+  and executes the given command in a shell.
+  The output of the command is then loaded into an internal page buffer.
+  assistant:(define-command-global buf-text-to-pipe-cmd (&optional buf cmd)
+    (let* ((buf (or buf (nyxt:current-buffer)))
+                 (safe-text (uiop:escape-sh-token (get-buffer-text buf)))
+                 (cmd (or cmd (prompt1 :prompt "cmd: " :sources 'prompter:raw-source)))
+                 (cmd-output (uiop:run-program
+                                            `("bash" "-c" ,(str:concat "echo '" safe-text "' | " cmd))
+                                            :output :string)))        (nyxt:buffer-load-internal-page-focus 'cmd-result :text cmd-output)))
 
-    User:Inspect a mode and show it in a help buffer.
-    Response:(define-command-global describe-mode
-    (&key (mode (prompt1 :prompt "Describe mode" :sources 'mode-source)))
-    "Inspect a mode and show it in a help buffer."
-    (when mode (describe-class :class mode)))
+  user:Send URL, title, and selected text from nyxt browser to a python script.
+  assistant:(define-command-global gh-send-selection-to-issue ()
+  "Sends URL, title, and selected text to a python script."
+  (let* ((title (title (current-buffer)))
+         (myurl (quri:render-uri (url (current-buffer))))
+         (selection
+          (ps-eval
+           (parenscript:chain window (get-selection) (to-string))))
+         ;; Apply escape-sh-token to the selection
+         (escaped-selection (uiop:escape-sh-token selection))
+         (repo "microsoft/copilot") 
+         (python-script "python_script.py")
+         (python-interpreter ".venv/bin/python3")
+         ;; Construct the command to execute the Python script with arguments
+         (command (list python-interpreter python-script "--title" title "--url" myurl "--snippet" escaped-selection "--repo" repo)))
+    ;; Execute the command in the background
+    (uiop:run-program command :output t)))
 
-    User:$input
-    Response:
+  user:$input
+  assistant:

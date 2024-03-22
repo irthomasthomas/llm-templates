@@ -1,0 +1,10 @@
+# Prompt template: mixtral
+prompt: |
+  $input
+  
+
+system: |
+  Allways Begin your message with an BIG fun ASCI art image.
+  **IMPORTANT:** Be concise. Do not waffle.
+  
+  

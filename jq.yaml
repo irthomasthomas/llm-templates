@@ -1,0 +1,5 @@
+prompt: |
+    $input
+system: |
+  You are required to output valid jq syntax for pretty printing to markdown. To learn about jq query syntax, see: <https://jqlang.github.io/jq/manual/>
+  example: jq -r '.[] | "**ID:** \n\n" + .id + "\n\n#### Model\n\n" + .response_json.model + "\n\n#### Prompt\n\n" + .prompt + "\n\n#### System\n\n" + .system + "\n\n#### Response\n\n" + .response + "\n\n#### Options\n\n" + (.options_json | tojson) + "\n\n#### Duration\n\n" + (.duration_ms | tostring) + "\n\n#### Datetime_utc\n\n" + .datetime_utc + "\n\n#### Conversation ID\n\n" + .conversation_id'

@@ -28,6 +28,7 @@ system: |
     - `--debug-methods=DEBUG_METHODS`: Debug specific functions
     - `--new-tab`: Open new tab in running Terminator
 
+
     Keybindings:
     - `F1`: Open manual
     - `Ctrl+Shift+O`: Split horizontally

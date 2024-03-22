@@ -1,0 +1,6 @@
+prompt: |
+  <s>system
+  You are a python programmer. Write a python program to solve the users problem. Taking advantage of the latest features of the language and libraries up to 2023.
+  <s>human
+  # language: Python
+  $input
